@@ -42,7 +42,7 @@ public:
   bool     isOn(uint8_t row, uint8_t column);
   //  get multi status in a bit mask
   uint16_t isOnRow(uint8_t row);        //  get a whole row at once as bit mask.
-  uint16_t isOnColumn(uint8_t column);  //  get a whole column at once as bit mask.
+  //  uint16_t isOnColumn(uint8_t column);  //  get a whole column at once as bit mask.
 
   //  WRAPPERS
   //  e.g  switch 29 ==> row (X) = 3  column (Y) = 5

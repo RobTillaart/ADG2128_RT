@@ -76,12 +76,20 @@ void ADG2128::off(uint8_t row, uint8_t column)
   _send(pins, _mode);
 }
 
+
+
+
+
+
 bool ADG2128::isOn(uint8_t row, uint8_t column)
 {
   if ((row > 11 ) || (column > 7)) return false;
   uint16_t value = isOnRow(row);
   return (value & (1 << column)) > 0;
 }
+
+
+
 
 uint8_t ADG2128::isOnRow(uint8_t row)
 {
@@ -96,18 +104,18 @@ uint8_t ADG2128::isOnRow(uint8_t row)
   return _readback(mask);
 }
 
-uint8_t ADG2128::isOnColumn(uint8_t column)
-{
-  if (column > 11) return false;
-  //  Table 8 datasheet
-  uint8_t mask = 0x34;  //  == 0b00110100;
-  if (column & 0x08) mask |= 0x02;
-  if (column & 0x04) mask |= 0x01;
-  if (column & 0x02) mask |= 0x40;
-  if (column & 0x01) mask |= 0x08;
+// uint8_t ADG2128::isOnColumn(uint8_t column)
+// {
+  // if (column > 11) return false;
+  // //  Table 8 datasheet
+  // uint8_t mask = 0x34;  //  == 0b00110100;
+  // if (column & 0x08) mask |= 0x02;
+  // if (column & 0x04) mask |= 0x01;
+  // if (column & 0x02) mask |= 0x40;
+  // if (column & 0x01) mask |= 0x08;
 
-  return _readback(mask);
-}
+  // return _readback(mask);
+// }
 
 
 /////////////////////////////////////////////

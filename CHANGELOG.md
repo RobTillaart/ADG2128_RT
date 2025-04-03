@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.2.0] - 2025-04-03
 - fix #2, swap rows and columns to match figure 1 datasheet.
-- add **isOnRow(row)** and **isOn Column(column)**
+- add **isOnRow(row)** to replace isOnMask()
 - removed **isOnMask()**
 - update readme.md
 - update keywords.txt

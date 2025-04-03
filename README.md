@@ -119,8 +119,8 @@ TODO: run performance sketch on hardware. feedback is welcome.
 - **void on(uint8_t row, uint8_t column)** idem, row (X) = 0..11, column = (0..7)
 - **void off(uint8_t row, uint8_t column)** idem.
 - **bool isOn(uint8_t row, uint8_t column)** returns true if switch is on.
-- **uint16_t isOnColumn(uint8_t column)** get a whole column at once as bit mask.
 - **uint16_t isOnRow(uint8_t row)** get a whole column at once as bit mask.
+
 
 Convenience wrappers, switch sw = 0..95, row = sw % 12, column = sw / 12;
 - **void on(uint8_t sw)**
@@ -168,6 +168,8 @@ Error handling is to be elaborated.
 
 - cache status of switches to speed up On/Off
   - import export cache for reboot / reset purposes.
+- **uint16_t isOnColumn(uint8_t column)** get a whole column at once as bit mask.
+  - needs cache to be performant
 
 #### Wont
 
