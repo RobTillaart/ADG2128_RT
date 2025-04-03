@@ -78,11 +78,10 @@ bool ADG2128::off(uint8_t row, uint8_t column)
   return true;
 }
 
-
 bool ADG2128::isOn(uint8_t row, uint8_t column)
 {
   if ((row > 11 ) || (column > 7)) return false;
-  uint16_t value = isOnRow(row);
+  uint8_t value = isOnRow(row);
   return (value & (1 << column)) > 0;
 }
 
@@ -91,8 +90,9 @@ uint8_t ADG2128::isOnRow(uint8_t row)
 {
   if (row > 11) return false;
   //  Table 8 datasheet
-  uint16_t mask = 0x34;  //  == 0b00110100;
-  if (row & 0x08) mask |= 0x02;
+  //  0x34 == 0b00110100 - These bits are always set.
+  uint8_t mask = 0x34;
+  if (row & 0x08) mask |= 0x02;  //  only for ADG2128 
   if (row & 0x04) mask |= 0x01;
   if (row & 0x02) mask |= 0x40;
   if (row & 0x01) mask |= 0x08;
@@ -100,19 +100,12 @@ uint8_t ADG2128::isOnRow(uint8_t row)
   return _readback(mask);
 }
 
-//  implement this when cache is available.
-//  otherwise very expensive call as all rows must be read.
-// uint8_t ADG2128::isOnColumn(uint8_t column)
-// {
-  // if (column > 11) return false;
-  // //  Table 8 datasheet
-  // uint8_t mask = 0x34;  //  == 0b00110100;
-  // if (column & 0x08) mask |= 0x02;
-  // if (column & 0x04) mask |= 0x01;
-  // if (column & 0x02) mask |= 0x40;
-  // if (column & 0x01) mask |= 0x08;
 
-  // return _readback(mask);
+//  need some thoughts
+// bool ADG2128::Latch()
+// {
+//   //  send last data with one time overrule DIRECT flag
+//   _send(_pins, ADG2128_DIRECT_MODE);
 // }
 
 
@@ -181,6 +174,7 @@ int ADG2128::getLastError()
 
 int ADG2128::_send(uint8_t pins, uint8_t latchFlag)
 {
+  //  _pins = pins;  //  remember last pins for latch().
   _wire->beginTransmission(_address);
   _wire->write(pins);
   _wire->write(latchFlag);

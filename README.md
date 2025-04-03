@@ -26,7 +26,7 @@ Every row has a switch to every column, which can be on or off.
 In total this makes 96 switches.
 
 The device can operate in two modi, direct (transparent) or latched (delayed) mode.
-In the first setting a switch on or off will be visible immediately, while the latch mode 
+In the direct mode a switch on or off will be visible immediately, while the latch mode 
 waits until they can all be switched simultaneously.
 
 The device has a reset line that can be "pulsed LOW" which will reset 
@@ -45,6 +45,7 @@ Swapped columns and rows to match figure 1 of the datasheet. (See #2).
 Furthermore the interface of the library has been changed a bit.
 
 This makes version 0.1.0 obsolete.
+
 
 ### Related
 
@@ -169,20 +170,33 @@ Error handling is to be elaborated.
 
 #### Should
 
-- add some error handling
+- create examples
+  - performance sketch
+- improve error handling
 
 #### Could
 
 - cache status of switches to speed up On/Off
   - import export cache for reboot / reset purposes.
-- **uint16_t isOnColumn(uint8_t column)** get a whole column at once as bit mask.
+  - extern buffer of 12 bytes.
+- add **uint16_t isOnColumn(uint8_t column)** get a whole column at once as bit mask.
   - needs cache to be performant
+- add **latch()**, remember the last value sent,
+  - one time overrule the latch mode.
+- add **allOff(direct / latch)** sort of SW reset.
+  pretty expensive function. might use the onOnRow() to only reset the ones needed.
+- add **select(row, col)** select only one column per row.
+- add **unique(row, col)** select only one switch to be on.
+- group commands.
+  - **void onRow(uint8_t col)**
+  - **void onColumn(uint8_t row)**
+  - **void offRow(uint8_t col)**
+  - **void offColumn(uint8_t row)**
 
 #### Wont
 
 - technically one can connect modules to generate a "super module"
-  - 2 modules => 8x24 or 16x12
-  - 4 modules => 16x24 or 8x48
+  - 8x24 or 16x24 or ...
   - not supported in this library as many configurations are possible.
   - might be an idea for an example?
 
