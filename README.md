@@ -21,8 +21,9 @@ Arduino library for ADG2128 8x12 (cross-point) matrix switch with I2C.
 The library is **NOT** tested with hardware yet. Feedback is welcome.
 
 This library is to use an ADG2128 8x12 cross-point matrix switch from a microcontroller.
-That means the ADG2128 device implements a matrix of switches of 8 rows and 12 columns.
+That means the ADG2128 device implements a matrix of switches of 12 rows (X) and 8 columns (Y).
 Every row has a switch to every column, which can be on or off.
+In total this makes 96 switches.
 
 The device can operate in two modi, direct (transparent) or latched (delayed) mode.
 In the first setting a switch will be visible immediately, while the latch mode 
@@ -31,11 +32,16 @@ waits until they can all be switched simultaneously.
 The device has a reset line that can be "pulsed LOW" which will reset 
 all registers and switches to OFF state.
 
-The library is based on datasheet Rev. E, www.analog.com
+The library is based on datasheet Rev. E,
 
 - https://www.analog.com/media/en/technical-documentation/data-sheets/ADG2128.pdf
 
 Feedback as always is welcome.
+
+
+### Breaking change 0.2.0
+
+Swapped columns and rows to match figure 1 of the datasheet. (See #2).
 
 
 ### Compatibles
@@ -54,7 +60,7 @@ There exists 8x12 ADG2128, however that device is not 100% compatible with this 
 ### I2C Address
 
 The ADG2128 has three address pins, A0, A1, A2, which allows for a total of 
-8 addresses. These are in the range 0x70..0x77  or decimal 112..119.
+8 addresses. These are in the range 0x70..0x77 or decimal 112..119.
 
 
 ### I2C multiplexing
@@ -102,22 +108,25 @@ TODO: run performance sketch on hardware. feedback is welcome.
 
 ### Constructor
 
-- **ADG2128(uint8_t address = 0x70, TwoWire \*wire = &Wire)** optional select I2C bus.
-- **bool begin()** checks if device is visible on the I2C bus.
-- **bool isConnected()** Checks if device address can be found on I2C bus.
-- **uint8_t getAddress()** Returns the address, 0x70-0x77 (112-119).
+- **ADG2128(uint8_t address = 0x70, TwoWire \*wire = &Wire)** optional set address and select I2C bus.
+- **bool begin()** checks address range and if address can be found on I2C bus.
+- **bool isConnected()** checks if address can be found on I2C bus.
+- **uint8_t getAddress()** returns the address, 0x70-0x77 (112-119).
+
 
 ### On Off
 
-- **void on(uint8_t row, uint8_t col)** idem.
-- **void off(uint8_t row, uint8_t col)** idem.
-- **bool isOn(uint8_t row, uint8_t col)** returns true if switch os on.
-- **uint8_t isOnMask(uint8_t col)** get a whole column at once as bit mask.
+- **void on(uint8_t row, uint8_t column)** idem, row (X) = 0..11, column = (0..7)
+- **void off(uint8_t row, uint8_t column)** idem.
+- **bool isOn(uint8_t row, uint8_t column)** returns true if switch is on.
+- **uint16_t isOnColumn(uint8_t column)** get a whole column at once as bit mask.
+- **uint16_t isOnRow(uint8_t row)** get a whole column at once as bit mask.
 
-Convenience wrappers, sw = 0..95, row = sw / 12, col = sw % 12;
+Convenience wrappers, switch sw = 0..95, row = sw % 12, column = sw / 12;
 - **void on(uint8_t sw)**
 - **void off(uint8_t sw)**
 - **bool isOn(uint8_t sw)**
+
 
 ### Mode
 
@@ -127,6 +136,7 @@ The default is direct (transparent) mode.
 - **bool isLatchedMode()**idem.
 - **bool isDirectMode()** idem.
 
+
 ### Reset
 
 Using the reset pin is optional, keep it HIGH if you do not use it.
@@ -135,11 +145,13 @@ Otherwise you cannot write to the device.
 - **void setResetPin(uint8_t resetPin)** set the reset pin.
 - **void pulseResetPin()** resets all switches off, all registers ==> 0.
 
+
 ### Debug
 
 Error handling is to be elaborated.
 
 - **uint8_t getLastError()** returns last error of low level communication.
+
 
 ## Future
 
@@ -155,10 +167,15 @@ Error handling is to be elaborated.
 #### Could
 
 - cache status of switches to speed up On/Off
-  - import export cache
+  - import export cache for reboot / reset purposes.
 
 #### Wont
 
+- technically one can connect modules to generate a "super module"
+  - 2 modules => 8x24 or 16x12
+  - 4 modules => 16x24 or 8x48
+  - not supported in this library as many configurations are possible.
+  - might be an idea for an example?
 
 ## Support
 

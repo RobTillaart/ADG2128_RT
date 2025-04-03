@@ -2,8 +2,8 @@
 //    FILE: ADG2128.cpp
 //  AUTHOR: Rob Tillaart
 //    DATE: 2025-02-28
-// VERSION: 0.1.0
-// PURPOSE: Arduino library for ADG2128 8x8 (cross-point) matrix switch with I2C.
+// VERSION: 0.2.0
+// PURPOSE: Arduino library for ADG2128 8x12 (cross-point) matrix switch with I2C.
 //     URL: https://github.com/RobTillaart/ADG2128
 
 
@@ -56,41 +56,55 @@ uint8_t ADG2128::getAddress()
 //
 //  SWITCHES
 //
-void ADG2128::on(uint8_t row, uint8_t col)
+void ADG2128::on(uint8_t row, uint8_t column)
 {
-  if ((row > 7 ) || (col > 11)) return;
+  if ((row > 11 ) || (column > 7)) return;
+  //  Table 7 datasheet
   uint8_t pins = 0x80;  //  0x80 == ON
-  if (col < 6) pins |= (col << 3) + row;
-  else pins |= ((col + 2) << 3) + row;
+  if (row < 6) pins |= (row << 3) + column;
+  else pins |= ((row + 2) << 3) + column;
   _send(pins, _mode);
 }
 
-void ADG2128::off(uint8_t row, uint8_t col)
+void ADG2128::off(uint8_t row, uint8_t column)
 {
-  if ((row > 7 ) || (col > 11)) return;
-  uint8_t pins = 0x00;  //  0x00 == OFF
-  if (col < 6) pins |= (col << 3) + row;
-  else pins |= ((col + 2) << 3) + row;
-
+  if ((row > 11 ) || (column > 7)) return;
+  //  Table 7 datasheet
+  uint8_t pins = 0x00;  //  0x80 == OFF
+  if (row < 6) pins |= (row << 3) + column;
+  else pins |= ((row + 2) << 3) + column;
   _send(pins, _mode);
 }
 
-bool ADG2128::isOn(uint8_t row, uint8_t col)
+bool ADG2128::isOn(uint8_t row, uint8_t column)
 {
-  if ((row > 7 ) || (col > 11)) return false;
-  uint8_t value = isOn(col);
-  return (value & (1 << row)) > 0;
+  if ((row > 11 ) || (column > 7)) return false;
+  uint16_t value = isOnRow(row);
+  return (value & (1 << column)) > 0;
 }
 
-uint8_t ADG2128::isOnMask(uint8_t col)
+uint8_t ADG2128::isOnRow(uint8_t row)
 {
-  if (col > 11) return false;
+  if (row > 11) return false;
+  //  Table 8 datasheet
+  uint16_t mask = 0x34;  //  == 0b00110100;
+  if (row & 0x08) mask |= 0x02;
+  if (row & 0x04) mask |= 0x01;
+  if (row & 0x02) mask |= 0x40;
+  if (row & 0x01) mask |= 0x08;
+
+  return _readback(mask);
+}
+
+uint8_t ADG2128::isOnColumn(uint8_t column)
+{
+  if (column > 11) return false;
   //  Table 8 datasheet
   uint8_t mask = 0x34;  //  == 0b00110100;
-  if (col & 0x08) mask |= 0x02;
-  if (col & 0x04) mask |= 0x01;
-  if (col & 0x02) mask |= 0x40;
-  if (col & 0x01) mask |= 0x08;
+  if (column & 0x08) mask |= 0x02;
+  if (column & 0x04) mask |= 0x01;
+  if (column & 0x02) mask |= 0x40;
+  if (column & 0x01) mask |= 0x08;
 
   return _readback(mask);
 }

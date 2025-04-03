@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.2.0] - 2025-04-03
+- fix #2, swap rows and columns to match figure 1 datasheet.
+- add **isOnRow(row)** and **isOn Column(column)**
+- removed **isOnMask()**
+- update readme.md
+- update keywords.txt
+- minor edits
+
 ## [0.1.0] - 2025-02-28
 - initial version
 
