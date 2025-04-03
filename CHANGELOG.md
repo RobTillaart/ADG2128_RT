@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - fix #2, swap rows and columns to match figure 1 datasheet.
 - add **isOnRow(row)** to replace isOnMask()
 - removed **isOnMask()**
+- add bool return value for **bool on()** and **bool off()**
 - update readme.md
 - update keywords.txt
 - minor edits

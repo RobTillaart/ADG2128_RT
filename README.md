@@ -116,16 +116,22 @@ TODO: run performance sketch on hardware. feedback is welcome.
 
 ### On Off
 
-- **void on(uint8_t row, uint8_t column)** idem, row (X) = 0..11, column = (0..7)
-- **void off(uint8_t row, uint8_t column)** idem.
+- **bool on(uint8_t row, uint8_t column)** idem, row (X) = 0..11, column = (0..7)
+Returns false if row or column is out of range.
+- **bool off(uint8_t row, uint8_t column)** idem.
+Returns false if row or column is out of range.
 - **bool isOn(uint8_t row, uint8_t column)** returns true if switch is on.
-- **uint16_t isOnRow(uint8_t row)** get a whole column at once as bit mask.
+Returns false if switch off of OR row or column is out of range.
+User should check this difference as the library does not report this in a neat way.
+- **uint16_t isOnRow(uint8_t row)** get a whole row at once as bit mask.
 
 
-Convenience wrappers, switch sw = 0..95, row = sw % 12, column = sw / 12;
-- **void on(uint8_t sw)**
-- **void off(uint8_t sw)**
-- **bool isOn(uint8_t sw)**
+Convenience wrappers, switch sw = 0..95, row (X) = sw / 8, column (Y) = sw % 8;
+- **bool on(uint8_t sw)** returns false if sw is out of range.
+- **bool off(uint8_t sw)** returns false if sw is out of range.
+- **bool isOn(uint8_t sw)** returns true if sw is on.
+Returns false if sw off of OR out of range.
+User should check this difference as the library does not report this in a neat way.
 
 
 ### Mode
@@ -163,6 +169,7 @@ Error handling is to be elaborated.
 
 #### Should
 
+- add some error handling
 
 #### Could
 

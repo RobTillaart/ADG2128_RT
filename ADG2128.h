@@ -37,17 +37,17 @@ public:
 
   //  SWITCH
   //  row == X = 0..11, column == Y = 0..7
-  void     on(uint8_t row, uint8_t column);
-  void     off(uint8_t row, uint8_t column);
+  bool     on(uint8_t row, uint8_t column);
+  bool     off(uint8_t row, uint8_t column);
   bool     isOn(uint8_t row, uint8_t column);
   //  get multi status in a bit mask
-  uint16_t isOnRow(uint8_t row);        //  get a whole row at once as bit mask.
+  uint8_t  isOnRow(uint8_t row);        //  get a whole row at once as bit mask.
   //  uint16_t isOnColumn(uint8_t column);  //  get a whole column at once as bit mask.
 
   //  WRAPPERS
   //  e.g  switch 29 ==> row (X) = 3  column (Y) = 5
-  void     on(uint8_t sw)   { on(sw / 8, sw % 8); };
-  void     off(uint8_t sw)  { off(sw / 8, sw % 8); };
+  bool     on(uint8_t sw)   { return on(sw / 8, sw % 8); };
+  bool     off(uint8_t sw)  { return off(sw / 8, sw % 8); };
   uint8_t  isOn(uint8_t sw) { return isOn(sw / 8, sw % 8); };
 
 

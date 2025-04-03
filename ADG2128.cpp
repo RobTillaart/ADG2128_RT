@@ -56,29 +56,27 @@ uint8_t ADG2128::getAddress()
 //
 //  SWITCHES
 //
-void ADG2128::on(uint8_t row, uint8_t column)
+bool ADG2128::on(uint8_t row, uint8_t column)
 {
-  if ((row > 11 ) || (column > 7)) return;
+  if ((row > 11 ) || (column > 7)) return false;
   //  Table 7 datasheet
   uint8_t pins = 0x80;  //  0x80 == ON
   if (row < 6) pins |= (row << 3) + column;
   else pins |= ((row + 2) << 3) + column;
   _send(pins, _mode);
+  return true;
 }
 
-void ADG2128::off(uint8_t row, uint8_t column)
+bool ADG2128::off(uint8_t row, uint8_t column)
 {
-  if ((row > 11 ) || (column > 7)) return;
+  if ((row > 11 ) || (column > 7)) return false;
   //  Table 7 datasheet
   uint8_t pins = 0x00;  //  0x80 == OFF
   if (row < 6) pins |= (row << 3) + column;
   else pins |= ((row + 2) << 3) + column;
   _send(pins, _mode);
+  return true;
 }
-
-
-
-
 
 
 bool ADG2128::isOn(uint8_t row, uint8_t column)
@@ -87,8 +85,6 @@ bool ADG2128::isOn(uint8_t row, uint8_t column)
   uint16_t value = isOnRow(row);
   return (value & (1 << column)) > 0;
 }
-
-
 
 
 uint8_t ADG2128::isOnRow(uint8_t row)
@@ -104,6 +100,8 @@ uint8_t ADG2128::isOnRow(uint8_t row)
   return _readback(mask);
 }
 
+//  implement this when cache is available.
+//  otherwise very expensive call as all rows must be read.
 // uint8_t ADG2128::isOnColumn(uint8_t column)
 // {
   // if (column > 11) return false;
