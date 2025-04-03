@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - add **isOnRow(row)** to replace isOnMask()
 - removed **isOnMask()**
 - add bool return value for **bool on()** and **bool off()**
+- replaced setMode() to **setLatchMode()** and **setDirectMode()**
 - update readme.md
 - update keywords.txt
 - minor edits

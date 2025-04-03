@@ -53,7 +53,8 @@ public:
 
   //  MODE
   //  default direct (transparent) mode
-  void     setMode(bool latched = false);
+  void     setDirectMode();
+  void     setLatchMode();
   bool     isLatchedMode();
   bool     isDirectMode();
 

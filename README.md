@@ -26,7 +26,7 @@ Every row has a switch to every column, which can be on or off.
 In total this makes 96 switches.
 
 The device can operate in two modi, direct (transparent) or latched (delayed) mode.
-In the first setting a switch will be visible immediately, while the latch mode 
+In the first setting a switch on or off will be visible immediately, while the latch mode 
 waits until they can all be switched simultaneously.
 
 The device has a reset line that can be "pulsed LOW" which will reset 
@@ -42,12 +42,9 @@ Feedback as always is welcome.
 ### Breaking change 0.2.0
 
 Swapped columns and rows to match figure 1 of the datasheet. (See #2).
+Furthermore the interface of the library has been changed a bit.
 
-
-### Compatibles
-
-There exists 8x12 ADG2128, however that device is not 100% compatible with this library.
-
+This makes version 0.1.0 obsolete.
 
 ### Related
 
@@ -116,7 +113,9 @@ TODO: run performance sketch on hardware. feedback is welcome.
 
 ### On Off
 
-- **bool on(uint8_t row, uint8_t column)** idem, row (X) = 0..11, column = (0..7)
+Columns and rows match figure 1 of the datasheet.
+
+- **bool on(uint8_t row, uint8_t column)** idem, row (X) = 0..11, column (Y) = (0..7)
 Returns false if row or column is out of range.
 - **bool off(uint8_t row, uint8_t column)** idem.
 Returns false if row or column is out of range.
@@ -138,7 +137,8 @@ User should check this difference as the library does not report this in a neat 
 
 The default is direct (transparent) mode.
 
-- **void setMode(bool latched = false)** set mode, default direct.
+- **void setDirectMode()** set mode, default direct.
+- **void setLatchMode()** set mode to latch.
 - **bool isLatchedMode()**idem.
 - **bool isDirectMode()** idem.
 

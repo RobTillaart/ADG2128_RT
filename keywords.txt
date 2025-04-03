@@ -16,7 +16,8 @@ isOn	KEYWORD2
 isOnRow	KEYWORD2
 isOnColumn	KEYWORD2
 
-setMode	KEYWORD2
+setDirectMode	KEYWORD2
+setLatchMode	KEYWORD2
 isLatchedMode	KEYWORD2
 isDirectMode	KEYWORD2
 

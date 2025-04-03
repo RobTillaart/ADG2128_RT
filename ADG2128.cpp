@@ -121,9 +121,14 @@ uint8_t ADG2128::isOnRow(uint8_t row)
 //  MODE
 //
 //  default direct (transparent) mode
-void ADG2128::setMode(bool latched)
+void ADG2128::setDirectMode()
 {
-  _mode = latched ? ADG2128_LATCHED_MODE : ADG2128_DIRECT_MODE;
+  _mode = ADG2128_DIRECT_MODE;
+}
+
+void ADG2128::setLatchMode()
+{
+  _mode = ADG2128_LATCHED_MODE;
 }
 
 bool ADG2128::isLatchedMode()
@@ -174,11 +179,11 @@ int ADG2128::getLastError()
 //  PRIVATE
 //
 
-int ADG2128::_send(uint8_t pins, uint8_t value)
+int ADG2128::_send(uint8_t pins, uint8_t latchFlag)
 {
   _wire->beginTransmission(_address);
   _wire->write(pins);
-  _wire->write(value);
+  _wire->write(latchFlag);
   _error = _wire->endTransmission();
   return _error;
 }
