@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - removed **isOnMask()**
 - add bool return value for **bool on()** and **bool off()**
 - replaced setMode() to **setLatchMode()** and **setDirectMode()**
+- renumber error constants
+- update unit test
 - update readme.md
 - update keywords.txt
 - minor edits

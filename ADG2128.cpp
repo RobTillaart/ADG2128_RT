@@ -18,7 +18,7 @@ ADG2128::ADG2128(uint8_t address, TwoWire *wire)
 {
   _address = address;
   _wire = wire;
-  _error = 0;
+  _error = ADG2128_OK;
   _mode  = ADG2128_DIRECT_MODE;
   _reset = 255;
 }
@@ -26,11 +26,11 @@ ADG2128::ADG2128(uint8_t address, TwoWire *wire)
 bool ADG2128::begin()
 {
   //  reset variables
-  _error = 0;
+  _error = ADG2128_OK;
 
   if ((_address < 0x70) || (_address > 0x77))
   {
-    _error = -1;
+    _error = ADG2128_ADDRESS_ERROR;
     return false;
   }
   if (! isConnected())
@@ -92,7 +92,7 @@ uint8_t ADG2128::isOnRow(uint8_t row)
   //  Table 8 datasheet
   //  0x34 == 0b00110100 - These bits are always set.
   uint8_t mask = 0x34;
-  if (row & 0x08) mask |= 0x02;  //  only for ADG2128 
+  if (row & 0x08) mask |= 0x02;  //  only for ADG2128
   if (row & 0x04) mask |= 0x01;
   if (row & 0x02) mask |= 0x40;
   if (row & 0x01) mask |= 0x08;
@@ -162,7 +162,7 @@ void ADG2128::pulseResetPin()
 int ADG2128::getLastError()
 {
   int e = _error;
-  _error = 0;
+  _error = ADG2128_OK;
   return e;
 }
 
@@ -183,15 +183,20 @@ int ADG2128::_send(uint8_t pins, uint8_t latchFlag)
 }
 
 
-int ADG2128::_readback(uint8_t value)
+int ADG2128::_readback(uint8_t row)
 {
   _wire->beginTransmission(_address);
-  _wire->write(value);
+  _wire->write(row);
   _error = _wire->endTransmission();
+  if (_error != 0)
+  {
+    _error = ADG2128_REQUEST_ERROR;
+    return 0;
+  }
   uint8_t bytes = _wire->requestFrom(_address, (uint8_t)2);
   if (bytes != 2)
   {
-    _error = -1;
+    _error = ADG2128_REQUEST_ERROR;
     return 0;
   }
   _wire->read();  //  skip dummy data
