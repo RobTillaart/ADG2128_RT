@@ -60,10 +60,10 @@ bool ADG2128::on(uint8_t row, uint8_t column)
 {
   if ((row > 11 ) || (column > 7)) return false;
   //  Table 7 datasheet
-  uint8_t pins = 0x80;  //  0x80 == ON
-  if (row < 6) pins |= (row << 3) + column;
-  else pins |= ((row + 2) << 3) + column;
-  _send(pins, _mode);
+  uint8_t mask = 0x80;  //  0x80 == ON
+  if (row < 6) mask |= (row << 3) + column;
+  else mask |= ((row + 2) << 3) + column;
+  _send(mask, _mode);
   return true;
 }
 
@@ -71,10 +71,10 @@ bool ADG2128::off(uint8_t row, uint8_t column)
 {
   if ((row > 11 ) || (column > 7)) return false;
   //  Table 7 datasheet
-  uint8_t pins = 0x00;  //  0x80 == OFF
-  if (row < 6) pins |= (row << 3) + column;
-  else pins |= ((row + 2) << 3) + column;
-  _send(pins, _mode);
+  uint8_t mask = 0x00;  //  0x80 == OFF
+  if (row < 6) mask |= (row << 3) + column;
+  else mask |= ((row + 2) << 3) + column;
+  _send(mask, _mode);
   return true;
 }
 
@@ -172,11 +172,11 @@ int ADG2128::getLastError()
 //  PRIVATE
 //
 
-int ADG2128::_send(uint8_t pins, uint8_t latchFlag)
+int ADG2128::_send(uint8_t mask, uint8_t latchFlag)
 {
-  //  _pins = pins;  //  remember last pins for latch().
+  //  _latchMask = mask;  //  remember last mask for latch().
   _wire->beginTransmission(_address);
-  _wire->write(pins);
+  _wire->write(mask);
   _wire->write(latchFlag);
   _error = _wire->endTransmission();
   return _error;
